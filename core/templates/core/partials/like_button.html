@@ -1,0 +1,21 @@
+<div id="like-button-{{ post.id }}">
+    {% if user.is_authenticated %}
+      <form 
+        method="POST"
+        hx-post="{% url 'like' post.pk %}" 
+        hx-target="#like-button-{{ post.id }}" 
+        hx-swap="outerHTML"
+      >
+        {% csrf_token %}
+        {% if liked_by_user %}
+        <button class="text-red-600 hover:underline">❤️ Unlike</button>
+        {% else %}
+        <button class="text-gray-600 hover:underline">🤍 Like</button>
+        {% endif %}
+        <span class="ml-2 text-sm text-gray-500">{{ post.likes.count }} {{ post.likes.count|pluralize:"Like,Likes" }}</span>
+      </form>
+    {% else %}
+      <p class="text-sm text-gray-400">Login to like posts</p>
+    {% endif %}
+  </div>
+  

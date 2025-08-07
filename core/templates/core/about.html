@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <!-- About Me Section -->
+  <div class="max-w-3xl mx-auto mb-16">
+    <h1 class="text-4xl font-bold text-center mb-8">About Me</h1>
+    <div class="bg-white p-8 rounded shadow">
+      <div class="flex flex-col md:flex-row items-center gap-8">
+        <div class="w-48 h-48 bg-gray-200 rounded-full flex-shrink-0">
+          <!-- Add your profile image here -->
+          <img src="#" alt="Profile" class="w-full h-full object-cover rounded-full">
+        </div>
+        <div class="flex-1">
+          <p class="text-lg leading-relaxed">
+            Welcome to CabrelBlog! I'm a passionate developer and writer who loves creating 
+            innovative solutions and sharing knowledge through code and content.
+          </p>
+          <p class="text-lg leading-relaxed mt-4">
+            Explore my portfolio below to see the diverse range of projects I've worked on, 
+            from web applications to mobile apps and everything in between.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Portfolio Statistics -->
+  <div class="mb-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded shadow text-center">
+        <div class="text-2xl font-bold text-blue-600">{{ portfolio_stats.total_projects }}</div>
+        <div class="text-sm text-gray-600">Total Projects</div>
+      </div>
+      <div class="bg-white p-4 rounded shadow text-center">
+        <div class="text-2xl font-bold text-green-600">{{ portfolio_stats.completed_projects }}</div>
+        <div class="text-sm text-gray-600">Completed</div>
+      </div>
+      <div class="bg-white p-4 rounded shadow text-center">
+        <div class="text-2xl font-bold text-yellow-600">{{ portfolio_stats.in_progress_projects }}</div>
+        <div class="text-sm text-gray-600">In Progress</div>
+      </div>
+      <div class="bg-white p-4 rounded shadow text-center">
+        <div class="text-2xl font-bold text-purple-600">{{ portfolio_stats.technologies_used }}</div>
+        <div class="text-sm text-gray-600">Technologies</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Portfolio Section -->
+  <div class="mb-16">
+    <h2 class="text-3xl font-bold text-center mb-8">My Portfolio</h2>
+    
+    <!-- Filters -->
+    <div class="bg-white p-4 rounded shadow mb-8">
+      <form method="GET" class="flex flex-wrap gap-4 items-end">
+        <div class="flex-1 min-w-48">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Filter by Type:</label>
+          <select name="type" class="w-full p-2 border border-gray-300 rounded">
+            <option value="">All Types</option>
+            {% for value, label in portfolio_type_choices %}
+              <option value="{{ value }}" {% if value == current_type_filter %}selected{% endif %}>
+                {{ label }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="flex-1 min-w-48">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Filter by Status:</label>
+          <select name="status" class="w-full p-2 border border-gray-300 rounded">
+            <option value="">All Statuses</option>
+            {% for value, label in status_choices %}
+              <option value="{{ value }}" {% if value == current_status_filter %}selected{% endif %}>
+                {{ label }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Filter
+          </button>
+          <a href="{% url 'about' %}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ml-2">
+            Clear
+          </a>
+        </div>
+      </form>
+    </div>
+    
+    {% if featured_items %}
+    <!-- Featured Projects -->
+    <div class="mb-12">
+      <h3 class="text-2xl font-semibold mb-6 text-center text-blue-700">Featured Projects</h3>
+      <div class="grid md:grid-cols-2 gap-8">
+        {% for project in featured_items %}
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            {% if project.featured_image %}
+              <div class="h-48 bg-gray-200">
+                <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" 
+                     class="w-full h-full object-cover">
+              </div>
+            {% endif %}
+            
+            <div class="p-6">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">{{ project.get_type_icon }}</span>
+                  <a href="{% url 'portfolio_detail' project.slug %}" class="text-xl font-semibold hover:text-blue-600 transition-colors">
+                {{ project.title }}
+              </a>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">Featured</span>
+                  <span class="px-2 py-1 rounded text-xs font-medium {{ project.get_status_badge_class }}">
+                    {{ project.get_status_display }}
+                  </span>
+                </div>
+              </div>
+              
+              <p class="text-gray-600 mb-4">{{ project.bio|truncatechars:150 }}</p>
+              
+              <!-- Key Features -->
+              {% if project.key_features %}
+                <div class="mb-4">
+                  <h5 class="font-medium text-sm text-gray-800 mb-2">Key Features:</h5>
+                  <ul class="text-sm text-gray-600 space-y-1">
+                    {% for feature in project.get_key_features_list|slice:":3" %}
+                      <li class="flex items-start">
+                        <span class="text-green-500 mr-2">•</span>{{ feature }}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+              
+              <!-- Technologies -->
+              {% if project.technologies %}
+                <div class="mb-4">
+                  <div class="flex flex-wrap gap-2">
+                    {% for tech in project.get_technologies_list|slice:":6" %}
+                      <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">{{ tech }}</span>
+                    {% endfor %}
+                    {% if project.get_technologies_list|length > 6 %}
+                      <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-sm">
+                        +{{ project.get_technologies_list|length|add:"-6" }} more
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+              
+              <!-- Duration -->
+              {% if project.duration %}
+                <div class="mb-4 text-sm text-gray-600">
+                  <span class="font-medium">Duration:</span> {{ project.duration }}
+                </div>
+              {% endif %}
+              
+              <!-- Links -->
+              <div class="flex flex-wrap gap-3">
+                {% if project.live_url %}
+                  <a href="{{ project.live_url }}" target="_blank" 
+                     class="bg-blue-600 text-white px-3 py-2 rounded text-sm hover:bg-blue-700 transition-colors">
+                    View Live →
+                  </a>
+                {% endif %}
+                {% if project.github_url %}
+                  <a href="{{ project.github_url }}" target="_blank" 
+                     class="bg-gray-600 text-white px-3 py-2 rounded text-sm hover:bg-gray-700 transition-colors">
+                    GitHub →
+                  </a>
+                {% endif %}
+                {% if project.demo_url %}
+                  <a href="{{ project.demo_url }}" target="_blank" 
+                     class="bg-green-600 text-white px-3 py-2 rounded text-sm hover:bg-green-700 transition-colors">
+                    Demo →
+                  </a>
+                {% endif %}
+                {% if project.documentation_url %}
+                  <a href="{{ project.documentation_url }}" target="_blank" 
+                     class="text-blue-600 hover:text-blue-800 px-3 py-2 text-sm font-medium">
+                    Docs →
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- All Portfolio Items -->
+    <div>
+      <h3 class="text-2xl font-semibold mb-6 text-center">
+        {% if current_type_filter or current_status_filter %}
+          Filtered Projects ({{ portfolio_items.count }})
+        {% else %}
+          All Projects
+        {% endif %}
+      </h3>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for project in portfolio_items %}
+          <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+            {% if project.featured_image %}
+              <div class="h-40 bg-gray-200 rounded-t-lg">
+                <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" 
+                     class="w-full h-full object-cover rounded-t-lg">
+              </div>
+            {% endif %}
+            
+            <div class="p-4">
+              <div class="flex items-start justify-between mb-2">
+                <div class="flex items-center gap-2 flex-1">
+                  <span class="text-lg">{{ project.get_type_icon }}</span>
+                  <a href="{% url 'portfolio_detail' project.slug %}" class="text-lg font-semibold truncate hover:text-blue-600 transition-colors">
+                    {{ project.title }}
+                  </a>
+                </div>
+                <div class="flex flex-col gap-1 ml-2">
+                  {% if project.is_featured %}
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium whitespace-nowrap">Featured</span>
+                  {% endif %}
+                  <span class="px-2 py-1 rounded text-xs font-medium whitespace-nowrap {{ project.get_status_badge_class }}">
+                    {{ project.get_status_display }}
+                  </span>
+                </div>
+              </div>
+              
+              <p class="text-gray-600 text-sm mb-3">{{ project.short_description|truncatechars:100 }}</p>
+              
+              <!-- Technologies -->
+              {% if project.technologies %}
+                <div class="mb-3">
+                  <div class="flex flex-wrap gap-1">
+                    {% for tech in project.get_technologies_list|slice:":4" %}
+                      <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">{{ tech }}</span>
+                    {% endfor %}
+                    {% if project.get_technologies_list|length > 4 %}
+                      <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
+                        +{{ project.get_technologies_list|length|add:"-4" }}
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+              
+              <!-- Duration -->
+              {% if project.duration %}
+                <div class="mb-3 text-xs text-gray-500">
+                  Duration: {{ project.duration }}
+                </div>
+              {% endif %}
+              
+              <!-- Links -->
+              <div class="flex flex-wrap gap-2 text-sm">
+                {% if project.live_url %}
+                  <a href="{{ project.live_url }}" target="_blank" 
+                     class="text-blue-600 hover:text-blue-800 font-medium">
+                    Live
+                  </a>
+                {% endif %}
+                {% if project.github_url %}
+                  <a href="{{ project.github_url }}" target="_blank" 
+                     class="text-gray-600 hover:text-gray-800 font-medium">
+                    Code
+                  </a>
+                {% endif %}
+                {% if project.demo_url %}
+                  <a href="{{ project.demo_url }}" target="_blank" 
+                     class="text-green-600 hover:text-green-800 font-medium">
+                    Demo
+                  </a>
+                {% endif %}
+                {% if project.documentation_url %}
+                  <a href="{{ project.documentation_url }}" target="_blank" 
+                     class="text-purple-600 hover:text-purple-800 font-medium">
+                    Docs
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-span-full text-center py-12">
+            <p class="text-gray-500 text-lg">No portfolio items found.</p>
+            {% if current_type_filter or current_status_filter %}
+              <p class="text-sm text-gray-400 mt-2">Try adjusting your filters.</p>
+            {% endif %}
+            {% if user.is_staff %}
+              <p class="text-sm text-gray-400 mt-2">Add some projects in the Django admin!</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills Section -->
+  <div class="mb-16">
+    <h2 class="text-3xl font-bold text-center mb-8">Skills & Technologies</h2>
+    <div class="bg-white p-8 rounded shadow">
+      <div class="grid md:grid-cols-3 gap-6">
+        <div>
+          <h3 class="text-lg font-semibold mb-3 text-blue-700">Frontend</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded">HTML</span>
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded">CSS</span>
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded">JavaScript</span>
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded">React</span>
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded">Vue.js</span>
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded">Tailwind CSS</span>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-3 text-green-700">Backend</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded">Python</span>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded">Django</span>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded">Node.js</span>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded">PostgreSQL</span>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded">MongoDB</span>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded">REST APIs</span>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-3 text-purple-700">Tools & Other</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded">Git</span>
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded">Docker</span>
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded">AWS</span>
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded">Linux</span>
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded">Machine Learning</span>
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded">Data Analysis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <div class="text-center">
+    <h2 class="text-3xl font-bold mb-6">Let's Connect</h2>
+    <div class="bg-white p-8 rounded shadow">
+      <p class="text-lg mb-6">Interested in collaborating or have a project in mind?</p>
+      <div class="flex justify-center space-x-6">
+        <a href="mailto:loickemloung@gmail.com" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors">
+          Get In Touch
+        </a>
+        <a href="#" class="bg-gray-600 text-white px-6 py-3 rounded hover:bg-gray-700 transition-colors">
+          Download Resume
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

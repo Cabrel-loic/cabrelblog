@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-10">
+  <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
+
+  <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    {% for service in services %}
+      <div class="bg-white shadow rounded p-6 hover:shadow-lg transition">
+        <div class="text-3xl mb-4">{{ service.icon }}</div>
+        <h3 class="text-xl font-semibold mb-2">{{ service.title }}</h3>
+        <p class="text-gray-600">{{ service.description }}</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="text-center mt-12">
+    {% comment %} <a href="{% url 'contact' %}" class="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
+      Get Started
+    </a> {% endcomment %}
+  </div>
+</div>
+{% endblock %}

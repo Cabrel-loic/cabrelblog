@@ -7,7 +7,7 @@
       + Create Post
     </a>
   {% else %}
-    <p class="text-center text-sm text-gray-600 mb-4">Login to create a post.</p>
+    <p class="text-center text-sm text-gray-600 mb-4"><a href="{% url 'login' %}" class="text-red-500 hover:underline">Login</a> to create a post.</p>
   {% endif %}
 </div>
 

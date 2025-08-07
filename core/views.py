@@ -1,16 +1,66 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
+from django.conf import settings
+from django.urls import reverse_lazy
+from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DeleteView, DetailView, UpdateView, View, TemplateView
-from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, ContactForm
 from .models import Post, Like, Service, Portfolio
-from django.db.models import Q
+
+
+
+
+# Profile view
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'registration/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        # Get filter parameters
+        portfolio_type = self.request.GET.get('type', '')
+        status = self.request.GET.get('status', '')
+
+        # Show all portfolio items (no user filter)
+        portfolio_items = Portfolio.objects.all()
+        if portfolio_type:
+            portfolio_items = portfolio_items.filter(portfolio_type=portfolio_type)
+        if status:
+            portfolio_items = portfolio_items.filter(status=status)
+
+        featured_items = portfolio_items.filter(is_featured=True)
+
+        portfolio_stats = {
+            'total_projects': portfolio_items.count(),
+            'completed_projects': portfolio_items.filter(status='completed').count(),
+            'in_progress_projects': portfolio_items.filter(status='in_progress').count(),
+            'technologies_used': len(set([tech.strip() for item in portfolio_items for tech in item.get_technologies_list()])),
+        }
+
+        available_types = portfolio_items.values_list('portfolio_type', flat=True).distinct()
+        available_statuses = portfolio_items.values_list('status', flat=True).distinct()
+
+        context.update({
+            'user': user,
+            'portfolio_items': portfolio_items,
+            'featured_items': featured_items,
+            'portfolio_stats': portfolio_stats,
+            'available_types': available_types,
+            'available_statuses': available_statuses,
+            'current_type_filter': portfolio_type,
+            'current_status_filter': status,
+            'portfolio_type_choices': Portfolio.PORTFOLIO_TYPES,
+            'status_choices': Portfolio.STATUS_CHOICES,
+        })
+        return context
 
 # Home view
 class HomeView(TemplateView):
@@ -232,16 +282,6 @@ class PortfolioDetailView(DetailView):
 
 
 # Contact View
-# Add this to your views.py file
-
-from django.views.generic import TemplateView
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.conf import settings
-from .forms import ContactForm
-from .models import ContactMessage
-
 class ContactView(TemplateView):
     """Contact page with form handling"""
     template_name = 'core/contact.html'

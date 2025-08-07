@@ -5,14 +5,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CABRELBLOG</title>
+  <link rel="icon" type="image/png" href="{% static 'assets/images/favicon.png' %}" sizes="32x32">
   <link rel="stylesheet" href="{% static 'output.css' %}">
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
   <!-- Navbar -->
   <nav class="bg-white shadow mb-8">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="/" class="text-2xl font-bold text-blue-600">CABRELBLOG</a>
+      <a href="/" class="flex items-center gap-2">
+        <img src="{% static 'assets/images/Logo.png' %}" alt="Logo" class="h-10 w-10 object-contain rounded-full shadow"/>
+        <span class="text-2xl font-bold text-blue-600 tracking-tight">CABRELBLOG</span>
+      </a>
       <div class="space-x-4">
         {% if user.is_authenticated %}
           <span class="text-sm">Hello, {{ user.username }}</span>

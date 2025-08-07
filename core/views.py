@@ -109,7 +109,11 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         post = self.get_object()
         context['form'] = CommentForm()
-        context['liked_by_user'] = post.likes.filter(user=self.request.user).exists()
+        user = self.request.user
+        liked_by_user = False
+        if user.is_authenticated:
+            liked_by_user = post.likes.filter(user=user).exists()
+        context['liked_by_user'] = liked_by_user
         return context
 
 # View for editing Posts

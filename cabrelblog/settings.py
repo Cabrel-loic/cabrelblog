@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os, dj_database_url
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--a^_j3jft@fdy!fnld*&$@ug*4(w_w%!t-!g)%+mv=&-*+rz#$'
+SECRET_KEY = config{'SECRET_KEY'}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -97,12 +99,17 @@ WSGI_APPLICATION = 'cabrelblog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'sqlite_db',
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'sqlite_db',
 
-    }
+#     }
+# }
+
+
+DATABASES = {
+    'default': dj_database_url.parse(config('DATABASE_URL'))
 }
 
 

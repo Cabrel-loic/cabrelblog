@@ -1,2 +1,1 @@
-# cabrelblog
-hooyia blog application
+"# Cabrel Blog" 

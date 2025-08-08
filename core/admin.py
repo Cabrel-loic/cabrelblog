@@ -1,16 +1,13 @@
 from django.contrib import admin
-from .models import Category, Portfolio, Post, Tag, Comment, Like, Service
+from .models import Category, Portfolio, Post, Tag, Comment, Like, Service, ContactMessage
+ 
 
+
+# Service registering to the admin site
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('title', 'order')
     ordering = ('order',)
-
-
-# @admin.register(Portfolio)
-# class PortfolioAdmin(admin.ModelAdmin):
-#     list_display = ('title', 'order')
-#     ordering = ('order',)
 
 
 
@@ -23,17 +20,13 @@ admin.site.register(Like)
 
 
 
-# Add this to your admin.py file
-
-from django.contrib import admin
-from .models import Portfolio
-
+# Portfolio section
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
     list_display = ['title', 'portfolio_type', 'status', 'is_featured', 'is_public', 'order', 'created_at']
     list_filter = ['portfolio_type', 'status', 'is_featured', 'is_public', 'created_at']
     list_editable = ['is_featured', 'is_public', 'order', 'status']
-    search_fields = ['title', 'short_description', 'description', 'technologies']
+    search_fields = ['title', 'short_description', 'bio', 'technologies']
     ordering = ['-is_featured', 'order', '-created_at']
     prepopulated_fields = {'slug': ('title',)}
     
@@ -42,7 +35,7 @@ class PortfolioAdmin(admin.ModelAdmin):
             'fields': ('title', 'slug', 'portfolio_type', 'status')
         }),
         ('Content', {
-            'fields': ('short_description', 'description', 'key_features', 'challenges')
+            'fields': ('short_description', 'bio', 'key_features', 'challenges')
         }),
         ('Media', {
             'fields': ('featured_image', 'gallery_images'),
@@ -65,12 +58,8 @@ class PortfolioAdmin(admin.ModelAdmin):
         return super().get_queryset(request)
     
 
+
     # Contact section
-# Add this to your admin.py file
-
-from django.contrib import admin
-from .models import ContactMessage
-
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ['name', 'email', 'subject', 'status', 'created_at']

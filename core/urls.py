@@ -28,4 +28,7 @@ urlpatterns = [
     # Contact page
     path('contact/', views.ContactView.as_view(), name='contact'),
 
+    # Portfolio section
+     path('portfolio/<slug:slug>/', views.PortfolioDetailView.as_view(), name='portfolio detail'),
+
 ]

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-12">
+  <h1 class="text-3xl font-bold mb-2">{{ project.title }}</h1>
+
+  <div class="flex items-center text-sm text-gray-500 mb-6">
+    <span class="mr-2">{{ project.get_type_icon }} {{ project.get_portfolio_type_display }}</span>
+    <span class="mx-2">•</span>
+    <span class="{{ project.get_status_badge_class }}">{{ project.get_status_display }}</span>
+  </div>
+
+  {% if project.featured_image %}
+    <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="w-full h-64 object-cover rounded mb-6">
+  {% endif %}
+
+  <p class="text-gray-700 mb-4">{{ project.bio }}</p>
+
+  {% if project.get_key_features_list %}
+    <h2 class="text-xl font-semibold mt-8 mb-2">Key Features</h2>
+    <ul class="list-disc list-inside text-gray-700">
+      {% for feature in project.get_key_features_list %}
+        <li>{{ feature }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if project.technologies %}
+    <h2 class="text-xl font-semibold mt-8 mb-2">Technologies Used</h2>
+    <div class="text-sm text-gray-600">{{ project.technologies }}</div>
+  {% endif %}
+
+  {% if project.challenges %}
+    <h2 class="text-xl font-semibold mt-8 mb-2">Challenges Overcome</h2>
+    <p class="text-gray-600">{{ project.challenges }}</p>
+  {% endif %}
+
+  {% if project.get_gallery_images_list %}
+    <h2 class="text-xl font-semibold mt-8 mb-4">Gallery</h2>
+    <div class="grid grid-cols-2 gap-4">
+      {% for image in project.get_gallery_images_list %}
+        <img src="{{ image }}" class="rounded shadow-md">
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="mt-10 space-x-4">
+    {% if project.live_url %}
+      <a href="{{ project.live_url }}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Live Demo</a>
+    {% endif %}
+    {% if project.github_url %}
+      <a href="{{ project.github_url }}" target="_blank" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900">GitHub</a>
+    {% endif %}
+    {% if project.documentation_url %}
+      <a href="{{ project.documentation_url }}" target="_blank" class="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700">Docs</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

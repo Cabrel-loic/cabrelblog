@@ -57,15 +57,16 @@
     {% if user == post.author %}
       <div class="mt-6 space-x-4">
         <!-- HTMX Edit Button -->
-        <button
+        <!-- <button
           hx-get="{% url 'post edit partial' post.pk %}"
           hx-target="#post-detail-body"
           hx-swap="outerHTML"
           type="button"
           class="text-blue-600 hover:underline"
         >
-          ✏️ Edit
-        </button>
+        ✏️ Edit
+        </button> -->
+        <a href="{% url 'edit post' post.pk %}" class="text-blue-500 hover:underline">✏️ Edit</a>
 
         <!-- Delete Button (Optional: confirm page) -->
         <a href="{% url 'delete post' post.pk %}" class="text-red-600 hover:underline">🗑️ Delete</a>

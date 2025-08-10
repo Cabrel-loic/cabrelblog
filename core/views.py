@@ -12,55 +12,119 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import CreateView, ListView, DeleteView, DetailView, UpdateView, View, TemplateView
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from .forms import PostForm, CommentForm, ContactForm
-from .models import Post, Like, Service, Portfolio
+from .forms import PostForm, CommentForm, ContactForm, UserUpdateForm, ProfileUpdateForm
+from .models import Post, Like, Service, Portfolio, Profile
 
 
 
 
 # Profile view
-class ProfileView(LoginRequiredMixin, TemplateView):
+class ProfileView(LoginRequiredMixin, DetailView):
+    model = User
     template_name = 'registration/profile.html'
+    context_object_name = 'profile_user'
+    
+    def get_object(self):
+        return self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Make sure user has a profile
+        Profile.objects.get_or_create(user=self.request.user)
+        
+        # Get all posts by this user, ordered by creation date (newest first)
+        context['user_posts'] = Post.objects.filter(author=self.request.user).order_by('-created_at')
+        
+        return context
+
+# class ProfileView(LoginRequiredMixin, TemplateView):
+#     template_name = 'registration/profile.html'
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         user = self.request.user
+#         # Get filter parameters
+#         portfolio_type = self.request.GET.get('type', '')
+#         status = self.request.GET.get('status', '')
+
+#         # Show all portfolio items (no user filter)
+#         portfolio_items = Portfolio.objects.all()
+#         if portfolio_type:
+#             portfolio_items = portfolio_items.filter(portfolio_type=portfolio_type)
+#         if status:
+#             portfolio_items = portfolio_items.filter(status=status)
+
+#         featured_items = portfolio_items.filter(is_featured=True)
+
+#         portfolio_stats = {
+#             'total_projects': portfolio_items.count(),
+#             'completed_projects': portfolio_items.filter(status='completed').count(),
+#             'in_progress_projects': portfolio_items.filter(status='in_progress').count(),
+#             'technologies_used': len(set([tech.strip() for item in portfolio_items for tech in item.get_technologies_list()])),
+#         }
+
+#         available_types = portfolio_items.values_list('portfolio_type', flat=True).distinct()
+#         available_statuses = portfolio_items.values_list('status', flat=True).distinct()
+
+#         context.update({
+#             'user': user,
+#             'portfolio_items': portfolio_items,
+#             'featured_items': featured_items,
+#             'portfolio_stats': portfolio_stats,
+#             'available_types': available_types,
+#             'available_statuses': available_statuses,
+#             'current_type_filter': portfolio_type,
+#             'current_status_filter': status,
+#             'portfolio_type_choices': Portfolio.PORTFOLIO_TYPES,
+#             'status_choices': Portfolio.STATUS_CHOICES,
+#         })
+#         return context
+    
+
+class ProfileDetailView(DetailView):
+    model = User
+    template_name = 'core/profile_detail.html'
+    context_object_name = 'profile_user'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = self.request.user
-        # Get filter parameters
-        portfolio_type = self.request.GET.get('type', '')
-        status = self.request.GET.get('status', '')
-
-        # Show all portfolio items (no user filter)
-        portfolio_items = Portfolio.objects.all()
-        if portfolio_type:
-            portfolio_items = portfolio_items.filter(portfolio_type=portfolio_type)
-        if status:
-            portfolio_items = portfolio_items.filter(status=status)
-
-        featured_items = portfolio_items.filter(is_featured=True)
-
-        portfolio_stats = {
-            'total_projects': portfolio_items.count(),
-            'completed_projects': portfolio_items.filter(status='completed').count(),
-            'in_progress_projects': portfolio_items.filter(status='in_progress').count(),
-            'technologies_used': len(set([tech.strip() for item in portfolio_items for tech in item.get_technologies_list()])),
-        }
-
-        available_types = portfolio_items.values_list('portfolio_type', flat=True).distinct()
-        available_statuses = portfolio_items.values_list('status', flat=True).distinct()
-
-        context.update({
-            'user': user,
-            'portfolio_items': portfolio_items,
-            'featured_items': featured_items,
-            'portfolio_stats': portfolio_stats,
-            'available_types': available_types,
-            'available_statuses': available_statuses,
-            'current_type_filter': portfolio_type,
-            'current_status_filter': status,
-            'portfolio_type_choices': Portfolio.PORTFOLIO_TYPES,
-            'status_choices': Portfolio.STATUS_CHOICES,
-        })
+        # Add related posts
+        context['posts'] = self.object.post_set.all()
         return context
+
+
+# Profile update view
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = Profile
+    form_class = ProfileUpdateForm
+    template_name = 'core/profile_update.html'
+    success_url = reverse_lazy('profile')
+    
+    def get_object(self):
+        # Create profile if it doesn't exist
+        profile, created = Profile.objects.get_or_create(user=self.request.user)
+        return profile
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['u_form'] = UserUpdateForm(self.request.POST, instance=self.request.user)
+        else:
+            context['u_form'] = UserUpdateForm(instance=self.request.user)
+        return context
+    
+    def form_valid(self, form):
+        context = self.get_context_data()
+        u_form = context['u_form']
+        
+        if u_form.is_valid():
+            u_form.save()
+            messages.success(self.request, 'Your profile has been updated!')
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
+        
+        
 
 # Home view
 class HomeView(TemplateView):
@@ -79,14 +143,26 @@ class UserResgisterView(CreateView):
     template_name = 'registration/register.html'
     success_url = reverse_lazy('login')
 
-# View for creating new posts
+# # View for creating new posts
+# class PostCreateView(LoginRequiredMixin, CreateView):
+#     model = Post
+#     form_class = PostForm
+#     template_name = 'core/post_create.html'
+#     success_url = reverse_lazy('all posts')
+
+#     def form_valid(self, form):
+#         form.instance.author = self.request.user
+#         return super().form_valid(form)
+
+
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    form_class = PostForm
+    form_class = PostForm  # or fields = ['title', 'content', 'image', ...]
     template_name = 'core/post_create.html'
     success_url = reverse_lazy('all posts')
-
+    
     def form_valid(self, form):
+        # Assign the current user as the author before saving
         form.instance.author = self.request.user
         return super().form_valid(form)
     

@@ -6,6 +6,9 @@ urlpatterns = [
 
     path('register/', views.UserResgisterView.as_view(), name = 'register'),
     path('accounts/profile/', views.ProfileView.as_view(), name='profile'),
+    path('profile/update/', views.ProfileUpdateView.as_view(), name='profile update'),
+    path('profile/<int:pk>/', views.ProfileDetailView.as_view(), name='profile detail'),
+
 
     path('posts/', views.PostListView.as_view(), name= 'all posts'),
     path('post/new/', views.PostCreateView.as_view(), name='create post'),

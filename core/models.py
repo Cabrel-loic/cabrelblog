@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from PIL import Image
+import os
 # from django.utils import timezone
 
 
@@ -29,6 +33,9 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        get_latest_by = 'created_at'
+
 
     def __str__(self):
         return str(self.title)
@@ -42,7 +49,7 @@ class Comment(models.Model):
 
 
     def __str__(self):
-        return f'Comment by {self.user.username} on {self.post.title}'
+        return f'Comment by {self.author.username} on {self.post.title}'
 
 
 # Like model
@@ -238,3 +245,50 @@ class ContactMessage(models.Model):
             'archived': 'bg-gray-100 text-gray-800',
         }
         return status_classes.get(self.status, 'bg-gray-100 text-gray-800')
+    
+
+
+# Profile model
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics/', blank=True, null=True)
+    bio = models.TextField(max_length=500, blank=True, help_text="Tell us about yourself")
+    
+    # Contact Details
+    phone = models.CharField(max_length=20, blank=True, help_text="Your phone number")
+    website = models.URLField(max_length=200, blank=True, help_text="Your personal website or portfolio")
+    location = models.CharField(max_length=100, blank=True, help_text="City, Country")
+    twitter = models.CharField(max_length=50, blank=True, help_text="Twitter username (without @)")
+    linkedin = models.URLField(max_length=200, blank=True, help_text="LinkedIn profile URL")
+    github = models.CharField(max_length=50, blank=True, help_text="GitHub username")
+    
+    # Additional Info
+    date_of_birth = models.DateField(null=True, blank=True)
+    profession = models.CharField(max_length=100, blank=True, help_text="Your job title or profession")
+    
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        
+        # Resize image to save space (only if image exists)
+        if self.image and os.path.exists(self.image.path):
+            img = Image.open(self.image.path)
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.image.path)
+
+# Create profile automatically when user is created
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    if hasattr(instance, 'profile'):
+        instance.profile.save()
+    else:
+        Profile.objects.create(user=instance)

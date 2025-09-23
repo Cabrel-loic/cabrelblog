@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CABRELBLOG</title>
-  <link rel="icon" type="image/png" href="{% static 'assets/images/favicon.png' %}" sizes="32x32">
-  <link rel="stylesheet" href="{% static 'output.css' %}">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%231e40af'/%3E%3Ctext x='32' y='38' text-anchor='middle' font-size='28' fill='white' font-family='Arial'%3EC%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{% static 'css/output.css' %}">
   <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 </head>
 
@@ -30,7 +30,10 @@ s0.parentNode.insertBefore(s1,s0);
   <nav class="bg-white shadow mb-8">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
       <a href="/" class="flex items-center gap-2">
-        <img src="{% static 'assets/images/Logo.png' %}" alt="Logo" class="h-10 w-10 object-contain rounded-full shadow"/>
+        <svg class="h-10 w-10 object-contain rounded-full shadow" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="CABRELBLOG logo">
+          <circle cx="32" cy="32" r="30" fill="#1e40af" />
+          <text x="32" y="38" text-anchor="middle" font-size="28" fill="white" font-family="Arial">C</text>
+        </svg>
         <span class="text-2xl font-bold text-blue-600 tracking-tight">CABRELBLOG</span>
       </a>
       <div class="space-x-4">

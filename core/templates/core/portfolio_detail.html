@@ -11,7 +11,7 @@
   </div>
 
   {% if project.featured_image %}
-    <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="w-full h-64 object-cover rounded mb-6">
+    <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="w-full h-64 object-cover rounded mb-6" loading="lazy">
   {% endif %}
 
   <p class="text-gray-700 mb-4">{{ project.bio }}</p>
@@ -39,7 +39,7 @@
     <h2 class="text-xl font-semibold mt-8 mb-4">Gallery</h2>
     <div class="grid grid-cols-2 gap-4">
       {% for image in project.get_gallery_images_list %}
-        <img src="{{ image }}" class="rounded shadow-md">
+        <img src="{{ image }}" alt="{{ project.title }} image {{ forloop.counter }}" class="rounded shadow-md object-cover w-full h-48" loading="lazy">
       {% endfor %}
     </div>
   {% endif %}

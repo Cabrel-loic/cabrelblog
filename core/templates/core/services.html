@@ -1,22 +1,49 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 py-10">
-  <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
 
-  <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-    {% for service in services %}
-      <div class="bg-white shadow rounded p-6 hover:shadow-lg transition">
-        <div class="text-3xl mb-4">{{ service.icon }}</div>
-        <h3 class="text-xl font-semibold mb-2">{{ service.title }}</h3>
-        <p class="text-gray-600">{{ service.description }}</p>
-      </div>
-    {% endfor %}
+<section class="relative isolate overflow-hidden bg-gray-900 py-24 sm:py-32">
+  <div class="container mx-auto px-4 text-center text-white">
+    <h1 class="text-5xl font-bold mb-4">My Services</h1>
+    <p class="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+      From custom web applications to API design and styling, I offer a range of services to bring your ideas to life.
+    </p>
+    <a href="{% url 'contact' %}" class="btn btn-primary">
+      Get a Quote
+    </a>
   </div>
+</section>
 
-  <div class="text-center mt-12">
-    {% comment %} <a href="{% url 'contact' %}" class="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
-      Get Started
-    </a> {% endcomment %}
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">What I Can Do For You</h2>
+
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {% for service in services %}
+        <div class="bg-white shadow-lg rounded-2xl p-8 transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+          <div class="text-4xl text-brand-orange mb-4">
+            {{ service.icon }}
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">{{ service.title }}</h3>
+          <p class="text-gray-600">{{ service.description }}</p>
+        </div>
+      {% endfor %}
+    </div>
   </div>
-</div>
+</section>
+
+<section class="py-16 bg-white">
+  <div class="container mx-auto px-4 text-center">
+    <div class="max-w-3xl mx-auto bg-gray-100 p-8 md:p-12 rounded-2xl shadow-xl">
+      <h2 class="text-3xl font-bold mb-4 text-gray-900">Ready to Start a Project?</h2>
+      <p class="text-lg text-gray-700 mb-6">
+        Let's discuss your vision and turn it into a reality. Reach out today for a consultation.
+      </p>
+      <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">
+        Contact Me Now
+      </a>
+    </div>
+  </div>
+</section>
+
 {% endblock %}

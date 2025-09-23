@@ -107,6 +107,8 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Expose the profile form as p_form for the template (alias to default 'form')
+        context['p_form'] = context.get('form')
         if self.request.POST:
             context['u_form'] = UserUpdateForm(self.request.POST, instance=self.request.user)
         else:
@@ -143,16 +145,7 @@ class UserResgisterView(CreateView):
     template_name = 'registration/register.html'
     success_url = reverse_lazy('login')
 
-# # View for creating new posts
-# class PostCreateView(LoginRequiredMixin, CreateView):
-#     model = Post
-#     form_class = PostForm
-#     template_name = 'core/post_create.html'
-#     success_url = reverse_lazy('all posts')
 
-#     def form_valid(self, form):
-#         form.instance.author = self.request.user
-#         return super().form_valid(form)
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):

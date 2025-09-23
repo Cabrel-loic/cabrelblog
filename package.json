@@ -1,13 +1,14 @@
 {
-    "name": "vente",
+    "name": "cabrelblog",
     "version": "3.8.0",
     "description": "",
     "scripts": {
         "start": "npm run dev",
         "build": "npm run build:clean && npm run build:tailwind",
-        "build:clean": "rimraf -i ./static/output.css",
-        "build:tailwind": "tailwindcss -i ./assets/input.css -o ./static/output.css",
-        "dev": "tailwindcss -i ./assets/input.css -o ./static/output.css --watch",
+        "build:clean": "rimraf -i ./static/css/output.css",
+        "build:tailwind": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --content './core/templates/**/*.html'",
+        "dev": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --content './core/templates/**/*.html' --watch",
+        "dev:tailwind": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --content './core/templates/**/*.html' --watch",
         "tailwindcss": "node ./node_modules/tailwindcss/lib/cli.js"
     },
     "devDependencies": {

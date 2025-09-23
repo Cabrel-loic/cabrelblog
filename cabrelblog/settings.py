@@ -23,11 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = ["*"]
 
 
@@ -141,18 +139,14 @@ USE_TZ = True
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [
-#     BASE_DIR / "static",
-# ]
-
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, ''),BASE_DIR, 'static'
+    BASE_DIR / 'static'
 ]
 
 # Media Configuration
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 

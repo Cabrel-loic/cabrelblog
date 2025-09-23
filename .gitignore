@@ -1,2 +1,25 @@
 venv
 node_modules
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+
+# Django
+sqlite_db
+*.sqlite3
+media/
+post_images/
+staticfiles/
+
+# Environment
+.env
+.env.*
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

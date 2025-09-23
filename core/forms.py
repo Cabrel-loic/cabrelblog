@@ -24,11 +24,11 @@ class PostForm(forms.ModelForm):
         }
 
 
+
+
+
+
 # Contact form
-# Create this file: forms.py (or add to existing forms.py)
-
-
-
 class ContactForm(forms.ModelForm):
     class Meta:
         model = ContactMessage

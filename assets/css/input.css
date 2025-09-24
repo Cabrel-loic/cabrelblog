@@ -1,0 +1,88 @@
+/* static/src/input.css */
+
+@import "tailwindcss";
+
+@layer components {
+    html {
+        scroll-behavior: smooth;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+
+    .font-inter {
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+
+    /* Component utilities and brand helpers */
+    /* Brand helpers */
+    .text-brand-orange { color: var(--color-primary-300); }
+    .bg-brand-orange { background-color: var(--color-primary-300); }
+    .text-brand-teal { color: var(--color-secondary-300); }
+    .bg-brand-teal { background-color: var(--color-secondary-300); }
+
+    /* Gradient helpers */
+    .from-brand-orange {
+        --tw-gradient-from: var(--color-primary-300) var(--tw-gradient-from-position);
+        --tw-gradient-to: color-mix(in oklab, var(--color-primary-300) 0%, transparent) var(--tw-gradient-to-position);
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+    }
+    .to-brand-teal {
+        --tw-gradient-to: var(--color-secondary-300) var(--tw-gradient-to-position);
+    }
+
+    /* Buttons */
+    .btn {
+        @apply inline-flex items-center justify-center rounded-md font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2;
+    }
+    .btn-sm { @apply px-3 py-1.5 text-sm; }
+    .btn-lg { @apply px-6 py-3 text-lg; }
+
+    .btn-primary { color: #fff; background-color: var(--color-primary-300); }
+    .btn-primary:hover { background-color: var(--color-primary-400); }
+    .btn-primary:focus { @apply ring-offset-white; box-shadow: 0 0 0 2px var(--color-primary-200); }
+
+    .btn-secondary { color: #fff; background-color: var(--color-secondary-300); }
+    .btn-secondary:hover { background-color: var(--color-secondary-400); }
+    .btn-secondary:focus { @apply ring-offset-white; box-shadow: 0 0 0 2px var(--color-secondary-200); }
+
+    .btn-text { @apply text-blue-600 hover:text-blue-800; }
+
+    /* Badges */
+    .badge { @apply inline-flex items-center rounded px-2 py-0.5 text-xs font-medium; background-color: rgba(0,0,0,0.06); color: rgb(55,65,81); }
+    .badge-success { @apply bg-green-100 text-green-800; }
+
+    /* Tags */
+    .tag { @apply inline-block rounded px-2 py-1 text-xs font-medium; }
+    .tag-primary { @apply bg-orange-100 text-orange-800; }
+    .tag-secondary { @apply bg-teal-100 text-teal-800; }
+    .tag-purple { @apply bg-purple-100 text-purple-800; }
+    .tag-gray { @apply bg-gray-100 text-gray-700; }
+    .tag-sm { @apply text-[0.70rem] px-1.5 py-0.5; }
+}
+
+@theme {
+    --font-inter: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    --color-primary-100: #ffc9ab;
+    --color-primary-200: #ff9256;
+    --color-primary-300: #ff5c02;
+    --color-primary-400: #ec5500;
+    --color-primary-500: #8d3200;
+    --color-primary-10: #ff5c02;
+
+    --color-secondary-100: #6fe5ef;
+    --color-secondary-200: #28d9e8;
+    --color-secondary-300: #13a1ad;
+    --color-secondary-400: #0b5e65;
+    --color-secondary-500: #073a3e;
+    --color-secondary-600: #0b5e65;
+    --color-secondary-10: rgba(11, 94, 101, 0.08);
+    --color-secondary-15: rgba(11, 94, 101, 0.15);
+    --color-secondary-20: rgba(11, 94, 101, 0.2);
+    --color-secondary-30: rgba(11, 94, 101, 0.35);
+    --color-secondary-50: rgba(11, 94, 101, 0.38);
+}

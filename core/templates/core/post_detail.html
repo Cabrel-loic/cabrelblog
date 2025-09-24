@@ -84,16 +84,14 @@
     {% if user == post.author %}
       
       <div class="mt-6 space-x-4">
-        <!-- HTMX Edit Button -->
-        <!-- <button
-          hx-get="{% url 'post edit partial' post.pk %}"
-          hx-target="#post-detail-body"
-          hx-swap="outerHTML"
+        <!-- Inline Edit Button (JS-powered) -->
+        <button
           type="button"
-          class="text-blue-600 hover:underline"
+          class="text-blue-600 hover:underline js-inline-edit-trigger"
+          data-edit-url="{% url 'post edit partial' post.pk %}"
         >
-        ✏️ Edit
-        </button> -->
+          ✏️ Edit Inline
+        </button>
         <a href="{% url 'edit post' post.pk %}" class="text-blue-500 hover:underline">✏️ Edit</a>
 
         <!-- Delete Button (Optional: confirm page) -->

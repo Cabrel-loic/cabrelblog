@@ -2,21 +2,25 @@
 {% load static %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 py-8">
-  <!-- Page Header -->
-  <div class="text-center mb-12">
-    <h1 class="text-4xl font-bold text-gray-900 mb-4">Get In Touch</h1>
-    <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-      Have a project in mind? Want to collaborate? Or just want to say hello? 
+<section class="relative isolate overflow-hidden bg-gray-900 py-16 sm:py-24">
+  <div class="container mx-auto px-4 text-center text-white">
+    <h1 class="text-4xl md:text-5xl font-bold mb-4">Get In Touch</h1>
+    <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto">
+      Have a project in mind? Want to collaborate? Or just want to say hello?
       I'd love to hear from you. Let's start a conversation!
     </p>
+    <div class="mt-6 flex justify-center">
+      <a href="#contact-form" class="btn btn-primary">Send a Message</a>
+    </div>
   </div>
+</section>
 
+<div class="max-w-7xl mx-auto px-4 py-12">
   <!-- Messages -->
   {% if messages %}
     <div class="mb-8">
       {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} bg-{% if message.tags == 'success' %}green{% else %}red{% endif %}-100 border border-{% if message.tags == 'success' %}green{% else %}red{% endif %}-400 text-{% if message.tags == 'success' %}green{% else %}red{% endif %}-700 px-4 py-3 rounded mb-4">
+        <div class="bg-{% if message.tags == 'success' %}green{% else %}red{% endif %}-50 border border-{% if message.tags == 'success' %}green{% else %}red{% endif %}-200 text-{% if message.tags == 'success' %}green{% else %}red{% endif %}-700 px-4 py-3 rounded mb-4">
           {{ message }}
         </div>
       {% endfor %}
@@ -141,8 +145,8 @@
     </div>
 
     <!-- Contact Form -->
-    <div class="lg:col-span-2">
-      <div class="bg-white rounded-lg shadow-lg p-8">
+    <div class="lg:col-span-2" id="contact-form">
+      <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10">
         <h2 class="text-2xl font-semibold mb-6 text-gray-900">Send a Message to the admin</h2>
         
         <form method="post" class="space-y-6">
@@ -205,7 +209,7 @@
 
           <!-- Submit Button -->
           <div class="text-center">
-            <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+            <button type="submit" class="btn btn-primary px-8 py-3">
               Send Message
             </button>
           </div>

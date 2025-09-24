@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'widget_tweaks',
     'core'
 ]
 
@@ -139,9 +140,8 @@ USE_TZ = True
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static'
-]
+STATICFILES_DIRS = [BASE_DIR / 'static', BASE_DIR / 'assets']
+
 
 # Media Configuration
 MEDIA_URL = '/media/'

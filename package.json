@@ -6,9 +6,9 @@
         "start": "npm run dev",
         "build": "npm run build:clean && npm run build:tailwind",
         "build:clean": "rimraf -i ./static/css/output.css",
-        "build:tailwind": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --content './core/templates/**/*.html'",
-        "dev": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --content './core/templates/**/*.html' --watch",
-        "dev:tailwind": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --content './core/templates/**/*.html' --watch",
+        "build:tailwind": "tailwindcss -i ./assets/css/input.css -o ./static/css/output.css --content './core/templates/**/*.html'",
+        "dev": "tailwindcss -i ./assets/css/input.css -o ./static/css/output.css --content './core/templates/**/*.html' --watch",
+        "dev:tailwind": "tailwindcss -i ./assets/css/input.css -o ./static/css/output.css --content './core/templates/**/*.html' --watch",
         "tailwindcss": "node ./node_modules/tailwindcss/lib/cli.js"
     },
     "devDependencies": {
